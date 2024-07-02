@@ -105,7 +105,8 @@ banco_deputados21 <- na.omit(banco_deputados21)
 
 
 banco_deputadosCorrelacao <- banco_deputados21 %>% group_by(Province) %>%
-  do(tidy(cor.test(.$`ECI dep`, .$ `ECI gov`)))
+  summarise(Coeficiente = cor(`ECI dep`,`ECI gov`), `P-valor` = cor.test(`ECI dep`, `ECI gov`)[[3]], Resultado = if (`P-valor`< 0.05) 'Rejeita' else 'Não rejeita')
+  
 
 write.csv2(banco_deputadosCorrelacao)
 
@@ -113,7 +114,7 @@ write.csv2(banco_deputadosCorrelacao)
 
 banco_governadoresCorrelacao <- banco_governadores1 %>%
   group_by(Province) %>%
-  do(tidy(cor.test(.$`ECI gov/opos`, .$ `ECI 1st/2nd`)))
+  summarise(Coeficiente = cor(`ECI gov/opos`,`ECI 1st/2nd`), `P-valor` = cor.test(`ECI gov/opos`, `ECI 1st/2nd`)[[3]], Resultado = if (`P-valor`< 0.05) 'Rejeita' else 'Não rejeita')
 
 
 write.csv2(banco_governadoresCorrelacao)
