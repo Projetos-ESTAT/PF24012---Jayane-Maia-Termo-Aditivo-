@@ -101,6 +101,8 @@ banco_deputados21 <- banco_deputados21 %>% select(Year,Province,"ECI dep","ECI 1
 
 banco_deputados21 <- rename(banco_deputados21, "ECI gov" = "ECI 1st/2nd")
 
+write.csv2(banco_deputados21)
+
 banco_deputados21 <- na.omit(banco_deputados21)
 
 
