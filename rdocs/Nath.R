@@ -47,7 +47,8 @@ dep_corr_spearman <- deputados %>%
             Resultado = if (`P-valor` < 0.05) 'Rejeita' else 'Não rejeita')
 
 write.csv2(dep_corr_spearman, 
-           "resultados/bancos/Teste_correlacao_deputados_spearman.csv")
+           "resultados/bancos/Teste_correlacao_deputados_spearman.csv",
+           fileEncoding = 'latin1')
 
 ## governadores -----
 
@@ -59,8 +60,8 @@ gov_corr_spearman <- governadores %>%
             Resultado = if (`P-valor` < 0.05) 'Rejeita' else 'Não rejeita')
 
 write.csv2(gov_corr_spearman, 
-           "resultados/bancos/Teste_correlacao_governadores_spearman.csv")
-
+           "resultados/bancos/Teste_correlacao_governadores_spearman.csv",
+           fileEncoding = 'latin1')
 
 # ENP ----
 ## selecionando variaveis de interesse
