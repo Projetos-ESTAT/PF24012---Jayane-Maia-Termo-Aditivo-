@@ -101,11 +101,12 @@ ggplot(df) +
   ) +
   geom_boxplot(width = 0.5) +
   labs(x = "Election year", y = "ENP", fill = '') +
+  coord_cartesian(ylim = c(0,20))  +
   theme_estat() +
   scale_fill_manual(values=c("white", "grey"), 
                     labels = c('State-dep','State-gov'))
-#ggsave("resultados/Nath/box_anos_ENP1.pdf", width = 240, height = 120, units = "mm")
-#ggsave("resultados/Nath/box_anos_ENP.jpeg", width = 158, height = 93, units = "mm")
+#ggsave("resultados/Nath/box_anos_ENP_comp.pdf", width = 250, height = 150, units = "mm")
+#ggsave("resultados/Nath/box_anos_ENP_comp.jpeg", width = 250, height = 150, units = "mm")
 
 
 # facetado por metade dos anos
@@ -117,14 +118,15 @@ ggplot(df) +
   ) +
   geom_boxplot(width = 0.5) +
   labs(x = "Election year", y = "ENP", fill = '') +
+  coord_cartesian(ylim = c(0,20))  +
   theme_estat() +
   scale_fill_manual(values=c("white", "grey"), 
                     labels = c('State-dep','State-gov')) +
   facet_wrap(~panel, scales = "free_x", nrow = 4) +
   theme(strip.background = element_blank(),
         strip.text.x = element_blank())
-#ggsave("resultados/Nath/box_anos_ENP2.pdf", width = 240, height = 120, units = "mm")
-#ggsave("resultados/Nath/box_anos_ENP.jpeg", width = 158, height = 93, units = "mm")
+#ggsave("resultados/Nath/box_anos_ENP_div.pdf", width = 250, height = 150, units = "mm")
+#ggsave("resultados/Nath/box_anos_ENP_div.jpeg", width = 250, height = 150, units = "mm")
 
 # ECI dep e ECI gov 1st/ 2nd  ----
 ## selecionando variaveis de interesse
@@ -158,11 +160,12 @@ ggplot(df2) +
   ) +
   geom_boxplot(width = 0.5) +
   labs(x = "Election year", y = "Competitiveness", fill = '') +
+  coord_cartesian(ylim = c(0.15,1))  +
   theme_estat() +
   scale_fill_manual(values=c("white", "grey"), 
                     labels = c('ECI dep','ECI gov 1st/2nd'))
-#ggsave("resultados/Nath/box_anos_ECI.pdf", width = 158, height = 93, units = "mm")
-#ggsave("resultados/Nath/box_anos_ECI.jpeg", width = 158, height = 93, units = "mm")
+#ggsave("resultados/Nath/box_anos_ECI_comp.pdf", width = 250, height = 150, units = "mm")
+#ggsave("resultados/Nath/box_anos_ECI_comp.jpeg", width = 250, height = 150, units = "mm")
 
 
 # facetado por metade dos anos
@@ -174,34 +177,13 @@ ggplot(df2) +
   ) +
   geom_boxplot(width = 0.5) +
   labs(x = "Election year", y = "Competitiveness", fill = '') +
+  coord_cartesian(ylim = c(0.15,1))  +
   theme_estat() +
   scale_fill_manual(values=c("white", "grey"), 
                     labels = c('ECI dep','ECI gov 1st/2nd')) +
   facet_wrap(~panel, scales = "free_x", nrow = 4) +
   theme(strip.background = element_blank(),
         strip.text.x = element_blank())
-#ggsave("resultados/Nath/box_anos_ECI.pdf", width = 158, height = 93, units = "mm")
-#ggsave("resultados/Nath/box_anos_ECI.jpeg", width = 158, height = 93, units = "mm")
-
-# facetado por metade dos anos e tirando legenda
-ggplot(df2) +
-  aes(
-    x = factor(Year, levels = ordem_anos),
-    y = ECI,
-    fill = tipo
-  ) +
-  geom_boxplot(width = 0.5) +
-  labs(x = "Election year", y = "Competitiveness", fill = '') +
-  theme_estat() +
-  scale_fill_manual(values=c("white", "grey"), 
-                    labels = c('ECI dep','ECI gov 1st/2nd'),
-                    guide = "none") +
-  facet_wrap(~panel, scales = "free_x", nrow = 4) +
-  theme(strip.background = element_blank(),
-        strip.text.x = element_blank())
-#ggsave("resultados/Nath/box_anos_ECI.pdf", width = 158, height = 93, units = "mm")
-#ggsave("resultados/Nath/box_anos_ECI.jpeg", width = 158, height = 93, units = "mm")
-
-
-
+#ggsave("resultados/Nath/box_anos_ECI.pdf", width = 250, height = 150, units = "mm")
+#ggsave("resultados/Nath/box_anos_ECI.jpeg", width = 250, height = 150, units = "mm")
 
