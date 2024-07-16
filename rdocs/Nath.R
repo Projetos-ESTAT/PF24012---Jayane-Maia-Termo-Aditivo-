@@ -33,6 +33,35 @@ governadores <- read_excel("banco/ECI-GOV-Ar.xlsx")
 ## ordem dos anos
 ordem_anos <- as.character(c(1985:2024))
 
+# correlacoes por Spearman -----
+
+## deputados -----
+
+dep_corr_spearman <- deputados %>% 
+  select(Province,`ECI dep`,`ECI gov`) %>% 
+  mutate(`ECI gov` = as.numeric(`ECI gov`)) %>% 
+  na.omit() %>% 
+  group_by(Province) %>%
+  summarise(Coeficiente = cor(`ECI dep`, `ECI gov`, method = 'spearman'),
+            'P-valor' = cor.test(`ECI dep`, `ECI gov`, method = 'spearman')[[3]],
+            Resultado = if (`P-valor` < 0.05) 'Rejeita' else 'Não rejeita')
+
+write.csv2(dep_corr_spearman, 
+           "resultados/bancos/Teste_correlacao_deputados_spearman.csv")
+
+## governadores -----
+
+gov_corr_spearman <- governadores %>% 
+  select(Province,`ECI gov/opos`,`ECI 1st/2nd`) %>% 
+  group_by(Province) %>%
+  summarise(Coeficiente = cor(`ECI gov/opos`,`ECI 1st/2nd`, method = 'spearman'),
+            'P-valor' = cor.test(`ECI gov/opos`,`ECI 1st/2nd`, method = 'spearman')[[3]],
+            Resultado = if (`P-valor` < 0.05) 'Rejeita' else 'Não rejeita')
+
+write.csv2(gov_corr_spearman, 
+           "resultados/bancos/Teste_correlacao_governadores_spearman.csv")
+
+
 # ENP ----
 ## selecionando variaveis de interesse
 dep <- deputados %>% 
