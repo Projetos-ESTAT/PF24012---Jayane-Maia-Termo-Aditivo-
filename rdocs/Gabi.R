@@ -25,17 +25,27 @@ source("rdocs/source/packages.R")
 
 # Calculo do ECI pro deputadosAR
 
-banco_deputados1 <- Base_deputados_provinciais_AR_1983_2023_1_Planilha1 %>%
+calcular_ENP <- function(Base_deputados_AR) {
+  votos_validos <- Base_deputados_AR$pv1
+  enp <- enp(votos_validos)
+  return(enp)
+}
+
+bancoDeputados <- Base_deputados_AR %>%
   group_by(yr, cst_n) %>%
+  mutate(ENP = calcular_ENP(cur_data()))
+
+
+banco_deputados1 <- bancoDeputados %>%
+  group_by(yr, cst_n,ENP) %>%
   summarise(Oi = sum(coalesce(ifelse(gov_oppos == "O", pv1, 0), 0)),
             Oi2 = sum(coalesce(ifelse(gov_oppos == "O", pv1, 0), 0)^2),
             O = Oi2 / Oi,
             Gi = sum(coalesce(ifelse(gov_oppos == "G", pv1, 0), 0)),
             Gi2 = sum(coalesce(ifelse(gov_oppos == "G", pv1, 0), 0)^2),
             G = Gi2 / Gi,
-            `ECI dep` = 1 - abs(O - G) / 100,
-            ENP = 1 / (sum((pv1 / 100)^2)))
-
+            `ECI dep` = 1 - abs(O - G) / 100)
+          
 banco_deputados1 <- banco_deputados1 %>%
   rename(Year = yr, Province = cst_n)
 
@@ -68,11 +78,21 @@ banco_deputados1$id <- ifelse(banco_deputados1$Province == "Buenos Aires", 1,
 
 banco_deputados1 <- na.omit(banco_deputados1)
 
+
 # Calculo dos indices banco governadores
 
+calcular_ENP_gov <- function(Base_governadores_AR_xlsx_Planilha2) {
+  votos_validos <- Base_governadores_AR_xlsx_Planilha2$`Votes party (percent)`
+  enp <- enp(votos_validos)
+  return(enp)
+}
 
-banco_governadores1 <- Base_governadores_vai_Base_governadores_certa_csv_3_ %>%
+bancoGovernadores <- Base_governadores_AR_xlsx_Planilha2 %>%
   group_by(Year, Province) %>%
+  mutate(ENP = calcular_ENP_gov(cur_data()))
+
+banco_governadores1 <- bancoGovernadores %>%
+  group_by(Year, Province,ENP) %>%
   summarise(Oi = sum(coalesce(ifelse(gov_oppos == "O", `Votes party (percent)`, 0), 0)),
             Oi2 = sum(coalesce(ifelse(gov_oppos == "O", `Votes party (percent)`, 0), 0)^2),
             O = ifelse(Oi == 0, 0, Oi2 / Oi), 
@@ -82,8 +102,7 @@ banco_governadores1 <- Base_governadores_vai_Base_governadores_certa_csv_3_ %>%
             `ECI gov/opos` = 1 - abs(O - G) / 100,
             p1 = sum(coalesce(ifelse(!is.na(first_second) & first_second == "first", `Votes party (percent)` / 100, 0), 0)),
             p2 = sum(coalesce(ifelse(!is.na(first_second) & first_second == "second", `Votes party (percent)` / 100, 0), 0)),
-            `ECI 1st/2nd` = (1 - (p1 - p2)),
-            ENP = 1 / (sum((`Votes party (percent)` / 100)^2))) %>%
+            `ECI 1st/2nd` = (1 - (p1 - p2))) %>%
   ungroup() %>%
   filter(if_all(everything(), ~ . != 0))
 
