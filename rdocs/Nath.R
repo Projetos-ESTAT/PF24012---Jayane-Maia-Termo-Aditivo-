@@ -50,6 +50,14 @@ write.csv2(dep_corr_spearman,
            "resultados/bancos/Teste_correlacao_deputados_spearman.csv",
            fileEncoding = 'latin1')
 
+### normalidade 
+dep_n <- deputados %>% 
+  select(`ECI dep`,`ECI gov`) %>% 
+  mutate(`ECI gov` = as.numeric(`ECI gov`)) %>% 
+  na.omit()
+shapiro.test(dep_n$`ECI dep`)
+shapiro.test(dep_n$`ECI gov`)
+
 ## governadores -----
 
 gov_corr_spearman <- governadores %>% 
@@ -62,6 +70,13 @@ gov_corr_spearman <- governadores %>%
 write.csv2(gov_corr_spearman, 
            "resultados/bancos/Teste_correlacao_governadores_spearman.csv",
            fileEncoding = 'latin1')
+
+### normalidade 
+gov_n <- governadores %>% 
+  select(`ECI gov/opos`,`ECI 1st/2nd`) %>% 
+  na.omit()
+shapiro.test(gov_n$`ECI gov/opos`)
+shapiro.test(gov_n$`ECI 1st/2nd`)
 
 # ENP ----
 ## selecionando variaveis de interesse
