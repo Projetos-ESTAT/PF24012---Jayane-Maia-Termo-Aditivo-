@@ -188,3 +188,85 @@ ggplot(df2) +
 #ggsave("resultados/Nath/box_anos_ECI.pdf", width = 250, height = 150, units = "mm")
 #ggsave("resultados/Nath/box_anos_ECI.jpeg", width = 250, height = 150, units = "mm")
 
+# relacao entre ECI e subtype_cand - banco eleitos -----
+
+# carregando pacotes
+pacman::p_load(readxl, DescTools)
+
+# importando banco 
+eleitos <- read_excel("banco/Base_governadores eleitos AR_1983-2023.xlsx")
+deputados <- read_excel("banco/ECI_deputados_AR (5).xlsx")
+
+# manipulacoes
+eleitos <-  eleitos %>% 
+  filter(subtype_cand!="NA")
+
+
+#Verificando umas coisas
+table(eleitos$type_winning_cand)
+table(eleitos$type_party_candidate)
+
+table(eleitos$type_party_candidate[eleitos$type_winning_cand=="exogeneous"])
+table(eleitos$type_party_candidate[eleitos$type_winning_cand=="governing"])
+table(eleitos$type_party_candidate[eleitos$type_winning_cand=="incumbent"])
+table(eleitos$type_party_candidate[eleitos$type_winning_cand=="semi governing"])
+# vai q precisa
+
+eleitos$ANO_ELEICAO <- as.numeric(eleitos$ANO_ELEICAO)
+
+## metodos 2 ----
+banco_eleitos <- left_join(deputados,eleitos[,c(1,3,20,23,24)],by = c("Year"="ANO_ELEICAO","Province"="PROVINCIA"))
+
+banco_eleitos <- banco_eleitos %>%
+  mutate(Diff = as.numeric(`ECI gov`) - `ECI dep`,
+         subtype_cand_code = case_when(
+           subtype_cand == 'exog/all diff' ~ '1',
+           subtype_cand == 'exog/same cand' ~ '2',
+           subtype_cand == 'gov/all diff' ~ '3',
+           subtype_cand == 'incumb/same family' ~ '4',
+           subtype_cand == 'incumb/diff cand' ~ '5',
+           subtype_cand == 'incumb/same cand' ~ '6',
+           subtype_cand == 'incumb/same cand*' ~ '7',
+           subtype_cand == 'incumb/vice' ~ '8',
+           subtype_cand == 'semigov/all diff' ~ '9',
+           subtype_cand == 'semigov/same cand' ~ '10',
+           subtype_cand == 'semigov/same cand*' ~ '11',
+           subtype_cand == 'semigov/vice' ~ '12'
+         ))
+
+banco_eleitos$subtype_cand_code <- factor(banco_eleitos$subtype_cand_code,
+                                          levels = c("1","2","3","4","5","6","7","8","9","10","11","12"))
+banco_eleitos <- banco_eleitos %>% na.omit(Diff)
+
+## boxplot
+ggplot(banco_eleitos) +  aes(x = subtype_cand_code,y = Diff) +
+  geom_boxplot(fill = c("white"), width = 0.5) +
+  labs(x = "Code", y = "Difference") +
+  theme_estat() +
+  scale_x_discrete(labels = function(x) str_wrap(x,width = 20))
+#ggsave("resultados/Nath/box_eleitos_ECI.pdf", width = 158, height = 93, units = "mm")
+#ggsave("resultados/Nath/box_eleitos_ECI.jpeg", width = 158, height = 93, units = "mm")
+
+
+## teste de comparacao de media
+anova1 <- aov(Diff ~ factor(subtype_cand), data = banco_eleitos)
+summary(anova1)
+shapiro.test(anova1$residuals)
+
+# nao parametrico
+kruskal.test(banco_eleitos$Diff, as.factor(banco_eleitos$subtype_cand))
+
+## teste de comparacoes multiplas
+ConoverTest(banco_eleitos$Diff,as.factor(banco_eleitos$subtype_cand), method = "holm")
+ConoverTest(banco_eleitos$Diff,as.factor(banco_eleitos$subtype_cand_code), method = "holm")
+
+
+
+
+
+
+
+
+
+
+
