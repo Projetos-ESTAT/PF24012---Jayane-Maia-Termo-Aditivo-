@@ -217,26 +217,35 @@ eleitos$ANO_ELEICAO <- as.numeric(eleitos$ANO_ELEICAO)
 ## metodos 2 ----
 banco_eleitos <- left_join(deputados,eleitos[,c(1,3,20,23,24)],by = c("Year"="ANO_ELEICAO","Province"="PROVINCIA"))
 
+# verificando de novo
+table(banco_eleitos$subtype_cand)
+
+# filtrando os q contem 1 obs
+banco_eleitos <- banco_eleitos %>% 
+  filter(!subtype_cand %in% c('exog/same cand', 'semigov/same cand', 
+                              'semigov/same cand*', 'semigov/vice'))
+
+# criando a diferenca
 banco_eleitos <- banco_eleitos %>%
   mutate(Diff = as.numeric(`ECI gov`) - `ECI dep`,
          subtype_cand_code = case_when(
            subtype_cand == 'exog/all diff' ~ '1',
-           subtype_cand == 'exog/same cand' ~ '2',
-           subtype_cand == 'gov/all diff' ~ '3',
-           subtype_cand == 'incumb/same family' ~ '4',
-           subtype_cand == 'incumb/diff cand' ~ '5',
-           subtype_cand == 'incumb/same cand' ~ '6',
-           subtype_cand == 'incumb/same cand*' ~ '7',
-           subtype_cand == 'incumb/vice' ~ '8',
-           subtype_cand == 'semigov/all diff' ~ '9',
-           subtype_cand == 'semigov/same cand' ~ '10',
-           subtype_cand == 'semigov/same cand*' ~ '11',
-           subtype_cand == 'semigov/vice' ~ '12'
+           subtype_cand == 'gov/all diff' ~ '2',
+           subtype_cand == 'incumb/same family' ~ '3',
+           subtype_cand == 'incumb/diff cand' ~ '4',
+           subtype_cand == 'incumb/same cand' ~ '5',
+           subtype_cand == 'incumb/same cand*' ~ '6',
+           subtype_cand == 'incumb/vice' ~ '7',
+           subtype_cand == 'semigov/all diff' ~ '8'
          ))
 
 banco_eleitos$subtype_cand_code <- factor(banco_eleitos$subtype_cand_code,
-                                          levels = c("1","2","3","4","5","6","7","8","9","10","11","12"))
+                                          levels = c("1","2","3","4","5","6","7","8"))
 banco_eleitos <- banco_eleitos %>% na.omit(Diff)
+
+# verificando de novo
+table(banco_eleitos$subtype_cand_code)
+
 
 ## boxplot
 ggplot(banco_eleitos) +  aes(x = subtype_cand_code,y = Diff) +
