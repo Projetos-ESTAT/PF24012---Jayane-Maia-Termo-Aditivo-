@@ -44,7 +44,8 @@ dep_corr_spearman <- deputados %>%
   group_by(Province) %>%
   summarise(Coeficiente = cor(`ECI dep`, `ECI gov`, method = 'spearman'),
             'P-valor' = cor.test(`ECI dep`, `ECI gov`, method = 'spearman')[[3]],
-            Resultado = if (`P-valor` < 0.05) 'Rejeita' else 'Não rejeita')
+            Resultado = if (`P-valor` < 0.05) 'Rejeita' else 'Não rejeita',
+            Coef_det = Coeficiente^2)
 
 write.csv2(dep_corr_spearman, 
            "resultados/bancos/Teste_correlacao_deputados_spearman.csv",
@@ -65,7 +66,8 @@ gov_corr_spearman <- governadores %>%
   group_by(Province) %>%
   summarise(Coeficiente = cor(`ECI gov/opos`,`ECI 1st/2nd`, method = 'spearman'),
             'P-valor' = cor.test(`ECI gov/opos`,`ECI 1st/2nd`, method = 'spearman')[[3]],
-            Resultado = if (`P-valor` < 0.05) 'Rejeita' else 'Não rejeita')
+            Resultado = if (`P-valor` < 0.05) 'Rejeita' else 'Não rejeita',
+            Coef_det = Coeficiente^2)
 
 write.csv2(gov_corr_spearman, 
            "resultados/bancos/Teste_correlacao_governadores_spearman.csv",
