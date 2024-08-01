@@ -287,11 +287,59 @@ ConoverTest(banco_eleitos$Diff,as.factor(banco_eleitos$subtype_cand), method = "
 ConoverTest(banco_eleitos$Diff,as.factor(banco_eleitos$subtype_cand_code), method = "holm")
 
 
+# TA do TA - testando exploratoria -----
+
+# carregando pacotes
+source("rdocs/source/packages.R")
+pacman::p_load(readxl)
+
+## importando bancos
+
+governadores <- read_excel("banco/ECI-GOV-Ar.xlsx")
+
+## tabela 2.2 - summary statistics para ECI gov/ 1st/2nd ----
+
+estatis_gov <- governadores %>%
+  group_by(Province) %>%
+  summarize(
+    Mean = mean(`ECI 1st/2nd`),
+    `Std. dev.` = sd(`ECI 1st/2nd`),
+    Min = min(`ECI 1st/2nd`),
+    Max = max(`ECI 1st/2nd`),  
+    N = n() 
+  )
 
 
+## tabela 2.2 - summary statistics para ECI gov/ 1st/2nd em On-Schedule e Full-data ----
 
+### filtrando
+on_schedule_gov <- governadores %>%
+  filter(!(Province == "Catamarca" & Year == 1988),
+         !(Province == "Corrientes" & (Year %in% c(1993, 1997, 2001, 2005, 2009, 2013, 2017, 2021))),
+         !(Province == "Córdoba" & Year == 1998),
+         !(Province == "Capital Federal" & Year == 2000),
+         !(Province == "Santiago del Estero" & (Year %in% c(2002, 2005, 2008, 2013, 2017, 2021))))
 
+full_data_gov <- governadores %>%
+  filter(!(Province %in% c("Catamarca", "Corrientes", "Córdoba", "Capital Federal", 
+                           "Santiago del Estero", "Tierra del Fuego")))
 
+# criando dataframe
+estatis_on_schedule_gov <- on_schedule_gov %>%
+  group_by(Year) %>%
+  summarise(
+    Mean = mean(`ECI 1st/2nd`, na.rm = TRUE),
+    `Std. dev.` = sd(`ECI 1st/2nd`, na.rm = TRUE),
+    N = n()
+)
+
+estatis_full_data_gov <- full_data_gov %>%
+  group_by(Year) %>%
+  summarise(
+    Mean = mean(`ECI 1st/2nd`, na.rm = TRUE),
+    `Std. dev.` = sd(`ECI 1st/2nd`, na.rm = TRUE),
+    N = n()
+  )
 
 
 
