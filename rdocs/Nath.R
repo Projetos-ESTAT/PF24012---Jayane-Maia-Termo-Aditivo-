@@ -331,6 +331,7 @@ full_data_gov <- deputados %>%
 # criando dataframe
 estatis_on_schedule_gov <- on_schedule_gov %>%
   group_by(Year) %>%
+  na.omit(`ECI gov`) %>%
   summarise(
     Mean = mean(`ECI gov`, na.rm = TRUE),
     `Std. dev.` = sd(`ECI gov`, na.rm = TRUE),
@@ -339,6 +340,7 @@ estatis_on_schedule_gov <- on_schedule_gov %>%
 
 estatis_full_data_gov <- full_data_gov %>%
   group_by(Year) %>%
+  na.omit(`ECI gov`) %>%
   summarise(
     Mean = mean(`ECI gov`, na.rm = TRUE),
     `Std. dev.` = sd(`ECI gov`, na.rm = TRUE),
