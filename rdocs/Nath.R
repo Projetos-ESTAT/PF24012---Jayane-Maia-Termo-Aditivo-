@@ -295,32 +295,36 @@ pacman::p_load(readxl)
 
 ## importando bancos
 
-governadores <- read_excel("banco/ECI-GOV-Ar.xlsx")
+deputados <- read_excel("banco/ECI_deputados_AR (5).xlsx")
+deputados$`ECI gov` <- as.numeric(deputados$`ECI gov`)
 
-## tabela 2.2 - summary statistics para ECI gov/ 1st/2nd ----
+## ECI gov/ 1st/2nd ----
+### tabela 2.2 - summary statistics para ECI gov/ 1st/2nd ----
 
-estatis_gov <- governadores %>%
+estatis_gov <- deputados %>%
   group_by(Province) %>%
+  na.omit(`ECI gov`) %>% 
   summarize(
-    Mean = mean(`ECI 1st/2nd`),
-    `Std. dev.` = sd(`ECI 1st/2nd`),
-    Min = min(`ECI 1st/2nd`),
-    Max = max(`ECI 1st/2nd`),  
+    Mean = mean(`ECI gov`),
+    `Std. dev.` = sd(`ECI gov`),
+    Min = min(`ECI gov`),
+    Max = max(`ECI gov`),  
     N = n() 
   )
 
 
-## tabela 2.2 - summary statistics para ECI gov/ 1st/2nd em On-Schedule e Full-data ----
+
+### tabela 2.2 - summary statistics para ECI gov/ 1st/2nd em On-Schedule e Full-data ----
 
 ### filtrando
-on_schedule_gov <- governadores %>%
+on_schedule_gov <- deputados %>%
   filter(!(Province == "Catamarca" & Year == 1988),
          !(Province == "Corrientes" & (Year %in% c(1993, 1997, 2001, 2005, 2009, 2013, 2017, 2021))),
          !(Province == "Córdoba" & Year == 1998),
          !(Province == "Capital Federal" & Year == 2000),
          !(Province == "Santiago del Estero" & (Year %in% c(2002, 2005, 2008, 2013, 2017, 2021))))
 
-full_data_gov <- governadores %>%
+full_data_gov <- deputados %>%
   filter(!(Province %in% c("Catamarca", "Corrientes", "Córdoba", "Capital Federal", 
                            "Santiago del Estero", "Tierra del Fuego")))
 
@@ -328,18 +332,69 @@ full_data_gov <- governadores %>%
 estatis_on_schedule_gov <- on_schedule_gov %>%
   group_by(Year) %>%
   summarise(
-    Mean = mean(`ECI 1st/2nd`, na.rm = TRUE),
-    `Std. dev.` = sd(`ECI 1st/2nd`, na.rm = TRUE),
+    Mean = mean(`ECI gov`, na.rm = TRUE),
+    `Std. dev.` = sd(`ECI gov`, na.rm = TRUE),
     N = n()
 )
 
 estatis_full_data_gov <- full_data_gov %>%
   group_by(Year) %>%
   summarise(
-    Mean = mean(`ECI 1st/2nd`, na.rm = TRUE),
-    `Std. dev.` = sd(`ECI 1st/2nd`, na.rm = TRUE),
+    Mean = mean(`ECI gov`, na.rm = TRUE),
+    `Std. dev.` = sd(`ECI gov`, na.rm = TRUE),
     N = n()
   )
+
+
+## ECI dep ----
+### tabela 2.2 - summary statistics para ECI dep ----
+
+estatis_dep <- deputados %>%
+  group_by(Province) %>%
+  summarize(
+    Mean = mean(`ECI dep`),
+    `Std. dev.` = sd(`ECI dep`),
+    Min = min(`ECI dep`),
+    Max = max(`ECI dep`),  
+    N = n() 
+  )
+
+### tabela 2.2 - summary statistics para ECI dep em On-Schedule e Full-data ----
+
+### filtrando
+on_schedule_dep <- deputados %>%
+  filter(!(Province == "Capital Federal" & Year == 2000),
+         !(Province == "Santiago del Estero" & (Year %in% c(2002, 2008))))
+
+full_data_dep <- deputados %>%
+  filter(!(Province %in% c("Capital Federal", "Santiago del Estero", "La Rioja",
+                           "Salta", "San Luis", "Tierra del Fuego")))
+
+# criando dataframe
+estatis_on_schedule_dep <- on_schedule_dep %>%
+  group_by(Year) %>%
+  summarise(
+    Mean = mean(`ECI dep`, na.rm = TRUE),
+    `Std. dev.` = sd(`ECI dep`, na.rm = TRUE),
+    N = n()
+  )
+
+estatis_full_data_dep <- full_data_dep %>%
+  group_by(Year) %>%
+  summarise(
+    Mean = mean(`ECI dep`, na.rm = TRUE),
+    `Std. dev.` = sd(`ECI dep`, na.rm = TRUE),
+    N = n()
+  )
+
+
+
+
+
+
+
+
+
 
 
 
