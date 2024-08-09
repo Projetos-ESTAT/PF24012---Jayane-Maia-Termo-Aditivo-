@@ -295,7 +295,7 @@ pacman::p_load(readxl)
 
 ## importando bancos
 
-deputados <- read_excel("banco/ECI_deputados_AR (5).xlsx")
+deputados <- read_excel("banco/ECI_dep_AR.xlsx")
 deputados$`ECI gov` <- as.numeric(deputados$`ECI gov`)
 
 ## ECI gov/ 1st/2nd ----
