@@ -297,18 +297,19 @@ pacman::p_load(readxl)
 
 deputados <- read_excel("banco/ECI_dep_AR.xlsx")
 deputados$`ECI gov` <- as.numeric(deputados$`ECI gov`)
+governadores <- read_excel("banco/ECI-GOV-Ar.xlsx")
 
 ## ECI gov/ 1st/2nd ----
 ### tabela 2.2 - summary statistics para ECI gov/ 1st/2nd ----
 
-estatis_gov <- deputados %>%
+estatis_gov <- governadores %>%
   group_by(Province) %>%
-  na.omit(`ECI gov`) %>% 
+  na.omit(`ECI 1st/2nd`) %>% 
   summarize(
-    Mean = mean(`ECI gov`),
-    `Std. dev.` = sd(`ECI gov`),
-    Min = min(`ECI gov`),
-    Max = max(`ECI gov`),  
+    Mean = mean(`ECI 1st/2nd`),
+    `Std. dev.` = sd(`ECI 1st/2nd`),
+    Min = min(`ECI 1st/2nd`),
+    Max = max(`ECI 1st/2nd`),  
     N = n() 
   )
 
@@ -317,33 +318,33 @@ estatis_gov <- deputados %>%
 ### tabela 2.2 - summary statistics para ECI gov/ 1st/2nd em On-Schedule e Full-data ----
 
 ### filtrando
-on_schedule_gov <- deputados %>%
+on_schedule_gov <- governadores %>%
   filter(!(Province == "Catamarca" & Year == 1988),
          !(Province == "Corrientes" & (Year %in% c(1993, 1997, 2001, 2005, 2009, 2013, 2017, 2021))),
          !(Province == "Córdoba" & Year == 1998),
          !(Province == "Capital Federal" & Year == 2000),
          !(Province == "Santiago del Estero" & (Year %in% c(2002, 2005, 2008, 2013, 2017, 2021))))
 
-full_data_gov <- deputados %>%
+full_data_gov <- governadores %>%
   filter(!(Province %in% c("Catamarca", "Corrientes", "Córdoba", "Capital Federal", 
                            "Santiago del Estero", "Tierra del Fuego")))
 
 # criando dataframe
 estatis_on_schedule_gov <- on_schedule_gov %>%
   group_by(Year) %>%
-  na.omit(`ECI gov`) %>%
+  na.omit(`ECI 1st/2nd`) %>%
   summarise(
-    Mean = mean(`ECI gov`, na.rm = TRUE),
-    `Std. dev.` = sd(`ECI gov`, na.rm = TRUE),
+    Mean = mean(`ECI 1st/2nd`, na.rm = TRUE),
+    `Std. dev.` = sd(`ECI 1st/2nd`, na.rm = TRUE),
     N = n()
 )
 
 estatis_full_data_gov <- full_data_gov %>%
   group_by(Year) %>%
-  na.omit(`ECI gov`) %>%
+  na.omit(`ECI 1st/2nd`) %>%
   summarise(
-    Mean = mean(`ECI gov`, na.rm = TRUE),
-    `Std. dev.` = sd(`ECI gov`, na.rm = TRUE),
+    Mean = mean(`ECI 1st/2nd`, na.rm = TRUE),
+    `Std. dev.` = sd(`ECI 1st/2nd`, na.rm = TRUE),
     N = n()
   )
 
