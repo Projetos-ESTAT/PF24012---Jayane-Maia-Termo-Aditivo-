@@ -313,7 +313,15 @@ estatis_gov <- governadores %>%
     N = n() 
   )
 
-
+governadores %>% 
+  na.omit(`ECI 1st/2nd`) %>% 
+  summarize(
+    Mean = mean(`ECI 1st/2nd`),
+    `Std. dev.` = sd(`ECI 1st/2nd`),
+    Min = min(`ECI 1st/2nd`),
+    Max = max(`ECI 1st/2nd`),  
+    N = n() 
+  )
 
 ### tabela 2.2 - summary statistics para ECI gov/ 1st/2nd em On-Schedule e Full-data ----
 
@@ -354,6 +362,16 @@ estatis_full_data_gov <- full_data_gov %>%
 
 estatis_dep <- deputados %>%
   group_by(Province) %>%
+  summarize(
+    Mean = mean(`ECI dep`),
+    `Std. dev.` = sd(`ECI dep`),
+    Min = min(`ECI dep`),
+    Max = max(`ECI dep`),  
+    N = n() 
+  )
+
+deputados %>% 
+  na.omit(`ECI dep`) %>% 
   summarize(
     Mean = mean(`ECI dep`),
     `Std. dev.` = sd(`ECI dep`),
