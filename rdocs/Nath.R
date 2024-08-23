@@ -389,7 +389,7 @@ on_schedule_dep <- deputados %>%
 
 full_data_dep <- deputados %>%
   filter(!(Province %in% c("Capital Federal", "Santiago del Estero", "La Rioja",
-                           "Salta", "San Luis", "Tierra del Fuego")))
+                           "Salta", "San Juan" , "San Luis", "Tierra del Fuego")))
 
 # criando dataframe
 estatis_on_schedule_dep <- on_schedule_dep %>%
